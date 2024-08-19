@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
 	"strings"
 )
 
@@ -19,22 +18,11 @@ var clrs = map[string]string{
 	"Reset":  "\u001b[0m",
 }
 
-func index() string {
-	if len(os.Args) != 4 {
-		fmt.Printf("Error: expected 3 argument but recieved %d\n", len(os.Args)-1)
-		os.Exit(1)
-	}
-	FILENAME := os.Args[3]
-	templates := map[string]bool{
-		"standard":   true,
-		"shadow":     true,
-		"thinkertoy": true,
-	}
-	if !templates[FILENAME] {
-		fmt.Println("Error: Invalid Bannar, Please choose standard, shadow, template or thinkertoy")
-		os.Exit(1)
-	}
-	argument := os.Args[2]
+func index(w http.ResponseWriter, r *http.Request) string {
+
+	FILENAME := r.FormValue("temp")
+
+	argument := r.FormValue("argu")
 	// if argument is empty
 	if argument == "" {
 		return ""
@@ -50,7 +38,7 @@ func index() string {
 	letters := ascii.Read(FILENAME)
 	// Split the argument based on new line
 	statments := ascii.Split(argument, "\\n")
-	useColor := flag.String("color", "Reset", "Choose one color: Reset, Black, Red, Green, Yellow or Blue")
+	useColor := flag.String("color", "Red", "Choose one color: Reset, Black, Red, Green, Yellow or Blue")
 	flag.Parse()
 	if color, exists := clrs[*useColor]; exists {
 		for _, s := range statments {
@@ -71,24 +59,41 @@ func index() string {
 
 }
 
-type Art struct {
-	art string
-}
 
 func main() {
-	hello := index()
-	hi := Art{art: hello}
-	fmt.Println(hi.art)
+	fs := http.FileServer(http.Dir("css"))
+	http.Handle("/css/", http.StripPrefix("/css/", fs))
+
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/ascii-art", resultHandler)
 	http.ListenAndServe("", nil)
 }
 
-var tpl *template.Template
-
 func handler(w http.ResponseWriter, r *http.Request) {
+	data := struct {
+		head string
+	}{
+		head: "Hello world",
+	}
 
-	tpl.ExecuteTemplate(w, "index.html", nil)
+	tmpl, err := template.ParseFiles("index.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = tmpl.ExecuteTemplate(w, "index.html", data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	http.Redirect(w, r, fmt.Sprintf("/ascii-art%s", index(w,r)), http.StatusSeeOther)
+
 }
-func init() {
-	tpl = template.Must(template.ParseGlob("index.html"))
+func resultHandler(w http.ResponseWriter, r *http.Request) {
+    // Retrieve query parameters
+   
+
+    // Display the result
+    fmt.Fprintf(w, "<h1>Submission Result</h1>")
+    fmt.Fprintf(w, "<p> %s</p>", index(w,r))
+   
 }

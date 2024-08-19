@@ -4,39 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ASCII Art</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <h1>Home Page</h1>
+    <form action="/" method="POST">
+        <div class="section">
+            <label for="string">Enter what you want to draw:</label><br>
+            <input type="text" id="string" name="argu" placeholder="Enter text here"><br>
+        </div>
     
-    <div class="section">
-        <label for="string">Enter what you want to draw:</label><br>
-        <input type="text" id="string" name="argu" placeholder="Enter text here"><br>
-    </div>
-
-    <div class="section color">
-        <label for="color">Choose color:</label><br>
-        <input type="radio" id="Red" name="color" value="red">
-        <label for="Red">Red</label><br>
-        <input type="radio" id="Black" name="color" value="black">
-        <label for="Black">Black</label><br>
-        <input type="radio" id="Yellow" name="color" value="yellow">
-        <label for="Yellow">Yellow</label><br>
-        <input type="radio" id="Green" name="color" value="green">
-        <label for="Green">Green</label><br>
-        <input type="radio" id="Blue" name="color" value="blue">
-        <label for="Blue">Blue</label><br>
-    </div>
-
-    <div class="section template">
-        <label for="temp">Choose template:</label><br>
-        <input type="radio" id="standard" name="temp" value="standard">
-        <label for="standard">Standard</label><br>
-        <input type="radio" id="shadow" name="temp" value="shadow">
-        <label for="shadow">Shadow</label><br>
-        <input type="radio" id="thinkertoy" name="temp" value="thinkertoy">
-        <label for="thinkertoy">Thinkertoy</label><br>
-    </div>
-    <input type="submit" id="submit" value="submit">
+        <div class="section color">
+            <label for="color">Choose color:</label><br>
+            <input type="radio" id="Red" name="color" value="red">
+            <label for="Red">Red</label><br>
+            <input type="radio" id="Black" name="color" value="black">
+            <label for="Black">Black</label><br>
+            <input type="radio" id="Yellow" name="color" value="yellow">
+            <label for="Yellow">Yellow</label><br>
+            <input type="radio" id="Green" name="color" value="green">
+            <label for="Green">Green</label><br>
+            <input type="radio" id="Blue" name="color" value="blue">
+            <label for="Blue">Blue</label><br>
+        </div>
+    
+        <div class="section template">
+            <label for="temp">Choose template:</label><br>
+            <input type="radio" id="standard" name="temp" value="standard">
+            <label for="standard">Standard</label><br>
+            <input type="radio" id="shadow" name="temp" value="shadow">
+            <label for="shadow">Shadow</label><br>
+            <input type="radio" id="thinkertoy" name="temp" value="thinkertoy">
+            <label for="thinkertoy">Thinkertoy</label><br>
+        </div>
+        <input type="submit" id="submit" value="submit">
+    </form>
 </body>
 </html>
