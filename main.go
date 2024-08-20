@@ -2,7 +2,6 @@ package main
 
 import (
 	ascii "ascii/functions"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
@@ -57,7 +56,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("index.html"))
 		tmpl.ExecuteTemplate(w, "index.html", nil)
 	} else {
-		fmt.Fprintf(w, "404 Page Not Found\n")
+		http.Error(w, "404 Page Not Found\n", 404)
 	}
 
 }
@@ -76,7 +75,7 @@ func resultHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		http.Error(w, "Invalid request method.", http.StatusMethodNotAllowed)
 	} else {
-		fmt.Fprintf(w, "404 Page Not Found\n")
+		http.Error(w, "404 Page Not Found\n", 404)
 	}
 
 }
