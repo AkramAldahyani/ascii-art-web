@@ -1,0 +1,77 @@
+
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}
+
+/* Container for the Form */
+form {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling Form Sections */
+.section {
+    margin-bottom: 20px;
+}
+
+.section label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.section input[type="text"] {
+    width: calc(100% - 22px); /* Adjust for padding and border */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+/* Styling Radio Buttons */
+.template label {
+    display: inline-block;
+    margin-right: 10px;
+    font-weight: normal;
+}
+
+.template input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* Submit Button */
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+#submit:active {
+    transform: scale(0.98); /* Slightly shrink the button on click */
+}

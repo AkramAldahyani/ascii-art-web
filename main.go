@@ -2,98 +2,81 @@ package main
 
 import (
 	ascii "ascii/functions"
-	"flag"
 	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
 )
 
-var clrs = map[string]string{
-	"Black":  "\u001b[30m",
-	"Red":    "\u001b[31m",
-	"Green":  "\u001b[32m",
-	"Yellow": "\u001b[33m",
-	"Blue":   "\u001b[34m",
-	"Reset":  "\u001b[0m",
-}
-
-func index(w http.ResponseWriter, r *http.Request) string {
-
-	FILENAME := r.FormValue("temp")
-
-	argument := r.FormValue("argu")
-	// if argument is empty
-	if argument == "" {
-		return ""
-	}
-	// if argument is only new lines
-	if strings.Count(argument, "\\n")*2 == len(argument) {
-		for i := 0; i < len(argument)/2; i++ {
-			fmt.Println()
-		}
-		return ""
-	}
-	var art string
-	letters := ascii.Read(FILENAME)
-	// Split the argument based on new line
-	statments := ascii.Split(argument, "\\n")
-	useColor := flag.String("color", "Red", "Choose one color: Reset, Black, Red, Green, Yellow or Blue")
-	flag.Parse()
-	if color, exists := clrs[*useColor]; exists {
-		for _, s := range statments {
-			if s == "\n" {
-				fmt.Println()
-				continue
-			}
-			art += color
-			art += ascii.Print(s, letters)
-		}
-		art += "\n"
-
-	} else {
-		// Print an error message if the color doesn't exist
-		fmt.Println("Color not recognized Please choose one from the following: Red, Black, Green, Yellow or Blue")
-	}
-	return art
-
-}
-
-
 func main() {
-	fs := http.FileServer(http.Dir("css"))
-	http.Handle("/css/", http.StripPrefix("/css/", fs))
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/ascii-art", resultHandler)
-	http.ListenAndServe("", nil)
+
+	// Start the server on port 8080
+	http.ListenAndServe(":8080", nil)
 }
 
+// This fuction return the output
+func index(r *http.Request) string {
+	FILENAME := r.FormValue("temp")
+	argument := r.FormValue("argu")
+	if argument == "" {
+		return "No input provided."
+	}
+	if strings.Count(argument, "\\n")*2 == len(argument) {
+		return "Invalid input."
+	}
+
+	var art string
+	letters := ascii.Read(FILENAME)
+	statements := ascii.Split(argument, "\\n")
+
+	for _, s := range statements {
+		if s == "\n" {
+			art += "\n"
+			continue
+		}
+		art += ascii.Print(s, letters)
+	}
+	art += "\n"
+
+	return art
+}
+
+// Handling the main page
 func handler(w http.ResponseWriter, r *http.Request) {
-	data := struct {
-		head string
-	}{
-		head: "Hello world",
+	if r.URL.Path == "/" {
+		if r.Method == http.MethodPost {
+			// Handle form submission and redirect to results
+			http.Redirect(w, r, "/ascii-art", http.StatusSeeOther)
+			return
+		}
+		tmpl := template.Must(template.ParseFiles("index.html"))
+		tmpl.ExecuteTemplate(w, "index.html", nil)
+	} else {
+		fmt.Fprintf(w, "404 Page Not Found\n")
 	}
-
-	tmpl, err := template.ParseFiles("index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = tmpl.ExecuteTemplate(w, "index.html", data)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	http.Redirect(w, r, fmt.Sprintf("/ascii-art%s", index(w,r)), http.StatusSeeOther)
 
 }
-func resultHandler(w http.ResponseWriter, r *http.Request) {
-    // Retrieve query parameters
-   
 
-    // Display the result
-    fmt.Fprintf(w, "<h1>Submission Result</h1>")
-    fmt.Fprintf(w, "<p> %s</p>", index(w,r))
-   
+// Handling the result page
+func resultHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path == "/ascii-art" {
+		if r.Method == http.MethodPost {
+			result := index(r)
+
+			tmpl := template.Must(template.ParseFiles("ascii-art.html"))
+			tmpl.ExecuteTemplate(w, "ascii-art.html", result)
+			// fmt.Fprintf(w, "<h1>Submission Result</h1>")
+			// fmt.Fprintf(w, "<pre>%s</pre>", result) // Use <pre> for preserving ASCII art formatting
+			return
+		}
+		http.Error(w, "Invalid request method.", http.StatusMethodNotAllowed)
+	} else {
+		fmt.Fprintf(w, "404 Page Not Found\n")
+	}
+
 }

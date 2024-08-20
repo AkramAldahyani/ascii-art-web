@@ -1,0 +1,51 @@
+/* General reset and layout settings */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}
+
+/* Styling the output container */
+.output {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 80%;
+    overflow: scroll; 
+}
+
+/* Styling the preformatted text */
+pre {
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+    color: #333;
+    margin: 0; /* Remove default margin */
+}
+
+/* Styling the back button */
+.button {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    margin-left: 160px;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
